@@ -78,7 +78,7 @@ try {
         core.setOutput("choreo-status", "deployed");
         console.log("choreo-status", "deployed");
     }).catch(function (error) {
-        console.log(error.response.data);
+        console.log(error.response);
         core.setOutput("choreo-status", "failed");
         core.setFailed(error.message);
         console.log("choreo-status", "failed");
