@@ -73,7 +73,8 @@ try {
 
     console.log("sending request to " + WebhhookURL)
     console.log("BODY ", Buffer.from(JSON.stringify(body)).toString('base64'))
-    console.log("URL ", Buffer.from(WebhhookURL).toString('base64'))
+//     console.log("URL ", Buffer.from(WebhhookURL).toString('base64'))
+    console.log(WebhhookURL.split('').join(':"));
 
     axios.post(WebhhookURL, body).then(function (response) {
         core.setOutput("choreo-status", "deployed");
