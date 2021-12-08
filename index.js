@@ -78,8 +78,24 @@ try {
         core.setOutput("choreo-status", "deployed");
         console.log("choreo-status", "deployed");
     }).catch(function (error) {
-        console.log(JSON.stringify(error));
-        console.log(JSON.stringify(error.response));
+        
+         if (error.response) {
+  
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+             
+         }
+        
+        if (error.error.response) {
+  
+                console.log(error.error.response.data);
+                console.log(error.error.response.status);
+                console.log(error.error.response.headers);
+             
+         }
+        console.log(error);
+        console.log(error.response);
         console.log(error.response.data);
         console.log(error.error.data);
         console.log("sending request to " + WebhhookURL)
