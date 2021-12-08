@@ -79,7 +79,8 @@ try {
         console.log("choreo-status", "deployed");
     }).catch(function (error) {
         console.log(JSON.stringify(error));
-        console.log(error.error);
+        console.log(JSON.stringify(error.response));
+        console.log(error.response.data);
         console.log(error.error.data);
         console.log("sending request to " + WebhhookURL)
         core.setOutput("choreo-status", "failed");
