@@ -1,12 +1,11 @@
 const axios = require('axios').default;
 const core = require('@actions/core');
-const github = require('@actions/github');
+// const github = require('@actions/github');
 const fs = require('fs');
 const yaml = require('js-yaml');
 
 try {
     const extractedPorts = [];
-    const workspaceEncordedFile = '';
     const domain = core.getInput('domain');
     const organizationId = core.getInput('org-id');
     const projectId = core.getInput('project-id');
@@ -19,35 +18,49 @@ try {
     const token = core.getInput('token');
     const debug = core.getInput('debug');
     const isHttpBased = core.getInput('is-http-based');
-    const payload = github.context.payload;
     const portExtractFilePath = core.getInput('port-extract-file-path');
+    const containerId = core.getInput('container-id');
+    const isContainerDeployment = core.getInput('is-container-deployment');
 
-    try {
-        let fileContents = fs.readFileSync(portExtractFilePath, 'utf8');
-        let data = yaml.loadAll(fileContents);
+    if (!isContainerDeployment) {
+        try {
+            let fileContents = fs.readFileSync(portExtractFilePath, 'utf8');
+            let data = yaml.loadAll(fileContents);
 
-        for (const file of data) {
-            if (file.kind == 'Service') {
-                for (const port of file.spec.ports) {
-                    extractedPorts.push({
-                        port: port.port,
-                        name: port.name
-                    });
+            for (const file of data) {
+                if (file.kind == 'Service') {
+                    for (const port of file.spec.ports) {
+                        extractedPorts.push({
+                            port: port.port,
+                            name: port.name
+                        });
+                    }
                 }
             }
+            if (extractedPorts.length === 0 && isHttpBased) {
+                extractedPorts.push({
+                    port: 8090,
+                    name: "port-1-default"
+                });
+            }
+        } catch (e) {
+            console.log(e);
         }
-        if (extractedPorts.length === 0 && isHttpBased) {
-            extractedPorts.push({
-                port: 8090,
-                name: "port-1-default"
-            });
-        }
-    } catch (e) {
-        console.log(e);
     }
 
+
     console.log(`Sending Request to Choreo API....`);
-    const body = {
+    const body = isContainerDeployment ? {
+        image: imageName,
+        tag: gitHash,
+        git_hash: gitHash,
+        gitops_hash: gitOpsHash,
+        app_id: appId,
+        api_version_id: api_version_id,
+        environment_id: envId,
+        registry_token: token,
+        container_id: containerId
+    } : {
         image: imageName,
         tag: gitHash,
         image_ports: extractedPorts,
@@ -60,11 +73,11 @@ try {
         environment_id: envId,
         registry_token: token,
         workspace_yaml_path: portExtractFilePath
-    }
+    };
 
     let WebhhookURL;
     if (body.registry_token && body.registry_token != "") {
-        WebhhookURL = `${domain}/image/deploy`
+        WebhhookURL = isContainerDeployment ? `${domain}/image/deploy-byoc` : `${domain}/image/deploy`
     }
     if (debug) {
         console.log("request-body: ", JSON.stringify(body));
