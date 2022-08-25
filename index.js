@@ -21,6 +21,7 @@ try {
     const portExtractFilePath = core.getInput('port-extract-file-path');
     const containerId = core.getInput('container-id');
     const isContainerDeployment = core.getInput('is-container-deployment');
+    const oasFilePath = core.getInput('oas-file-path');
 
     if (!isContainerDeployment) {
         try {
@@ -59,7 +60,8 @@ try {
         api_version_id: api_version_id,
         environment_id: envId,
         registry_token: token,
-        container_id: containerId
+        container_id: containerId,
+        oasFilePath: oasFilePath
     } : {
         image: imageName,
         tag: gitHash,

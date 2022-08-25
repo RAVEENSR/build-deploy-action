@@ -68,7 +68,11 @@ inputs:
   is-container-deployment: 
     description: 'Check container deployment'
     required: false
-    default: 'false'
+    default: ''
+  oas-file-path: 
+    description: 'Oas file path'
+    required: false
+    default: ''
 outputs:
   choreo-status:
     description: 'Status of the Webhook Call to choreo'
