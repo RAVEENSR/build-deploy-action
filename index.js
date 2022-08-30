@@ -61,7 +61,7 @@ try {
         environment_id: envId,
         registry_token: token,
         container_id: containerId,
-        oasFilePath: oasFilePath
+        api_definition_path: oasFilePath
     } : {
         image: imageName,
         tag: gitHash,
