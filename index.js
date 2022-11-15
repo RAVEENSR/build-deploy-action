@@ -1,6 +1,6 @@
 const axios = require('axios').default;
 const core = require('@actions/core');
-const github = require('@actions/github');
+// const github = require('@actions/github');
 const fs = require('fs');
 const yaml = require('js-yaml');
 
@@ -19,10 +19,9 @@ try {
     const debug = core.getInput('debug');
     const isHttpBased = core.getInput('is-http-based');
     const portExtractFilePath = core.getInput('port-extract-file-path');
-    // const portExtractFilePath = core.getInput('port-extract-file-path');
-    const choreoApp = process.env.CHOREO_APP;
-    console.log("CHOREO_APP ::: ", process.env.RUDDER_WEBHOOK_URL, process.env.CHOREO_ORG_ID);
 
+    const choreoApp = process.env.CHOREO_APP;
+    let cluster_image_tags = [];
     try {
         let fileContents = fs.readFileSync(portExtractFilePath, 'utf8');
         let data = yaml.loadAll(fileContents);
@@ -50,7 +49,10 @@ try {
     try {
         const fileContents = fs.readFileSync(`/home/runner/workspace/${choreoApp}/deployment-data.json`, 'utf8');
         let data = JSON.parse(fileContents);
-        console.log(data);
+        for (const cred of data) {
+            cred['imageNameWithTag'] = `${cred['imageNameWithTag']}/${choreoApp}:${gitHash}`
+        }
+        cluster_image_tags = data;
     } catch (error) {
         console.log("Failed to load deployment-data.json file: ", e);
     }
@@ -68,7 +70,8 @@ try {
         api_version_id: api_version_id,
         environment_id: envId,
         registry_token: token,
-        workspace_yaml_path: portExtractFilePath
+        workspace_yaml_path: portExtractFilePath,
+        cluster_image_tags
     }
 
     let WebhhookURL;
