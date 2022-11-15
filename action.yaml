@@ -12,7 +12,7 @@ inputs:
   org-id:
     description: 'Organization ID'
     required: true
-    default: 0
+    default: "0"
   project-id:
     description: 'Project ID'
     required: true
@@ -56,11 +56,11 @@ inputs:
   debug: 
     description: 'Enable request debug'
     required: false
-    default: false
+    default: "false"
   is-http-based: 
     description: 'Status of the http based app'
     required: false
-    default: false
+    default: "false"
 outputs:
   choreo-status:
     description: 'Status of the Webhook Call to choreo'
