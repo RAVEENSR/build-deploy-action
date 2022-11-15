@@ -6,7 +6,6 @@ const yaml = require('js-yaml');
 
 try {
     const extractedPorts = [];
-    const workspaceEncordedFile = '';
     const domain = core.getInput('domain');
     const organizationId = core.getInput('org-id');
     const projectId = core.getInput('project-id');
@@ -19,10 +18,11 @@ try {
     const token = core.getInput('token');
     const debug = core.getInput('debug');
     const isHttpBased = core.getInput('is-http-based');
-    const payload = github.context.payload;
     const portExtractFilePath = core.getInput('port-extract-file-path');
     // const portExtractFilePath = core.getInput('port-extract-file-path');
-    console.log("Check Payload : ", payload)
+    const choreoApp = process.env.CHOREO_APP;
+    console.log("CHOREO_APP ::: ",choreoApp);
+
     try {
         let fileContents = fs.readFileSync(portExtractFilePath, 'utf8');
         let data = yaml.loadAll(fileContents);
