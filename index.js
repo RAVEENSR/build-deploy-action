@@ -21,7 +21,8 @@ try {
     const isHttpBased = core.getInput('is-http-based');
     const payload = github.context.payload;
     const portExtractFilePath = core.getInput('port-extract-file-path');
-
+    // const portExtractFilePath = core.getInput('port-extract-file-path');
+    console.log("Check Payload : ", payload)
     try {
         let fileContents = fs.readFileSync(portExtractFilePath, 'utf8');
         let data = yaml.loadAll(fileContents);
@@ -71,7 +72,7 @@ try {
     }
 
     axios.post(WebhhookURL, body).then(function (response) {
-        core.setOutput("choreo-status", "deployed");
+        core.info("choreo-status", "deployed");
         console.log("choreo-status", "deployed");
     }).catch(function (error) {
         if (error.response) {
@@ -81,13 +82,13 @@ try {
             console.log(error.request);
         } else {
             console.log('Error', error.message);
-            core.setOutput("choreo-status", "failed");
+            core.info("choreo-status", "failed");
             core.setFailed(error.message);
         }
     });
 
 } catch (error) {
-    core.setOutput("choreo-status", "failed");
+    core.info("choreo-status", "failed");
     core.setFailed(error.message);
     console.log("choreo-status", "failed");
     console.log(error.message);
