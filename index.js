@@ -23,6 +23,8 @@ try {
     const isContainerDeployment = core.getInput('is-container-deployment');
     const oasFilePath = core.getInput('oas-file-path');
 
+    const choreoApp = process.env.CHOREO_GITOPS_REPO;
+    let cluster_image_tags = [];
     if (!isContainerDeployment) {
         try {
             let fileContents = fs.readFileSync(portExtractFilePath, 'utf8');
@@ -49,6 +51,17 @@ try {
         }
     }
 
+    try {
+        const fileContents = fs.readFileSync(`/home/runner/workspace/${choreoApp}/deployment-data.json`, 'utf8');
+        let data = JSON.parse(fileContents);
+        for (const cred of data) {
+            cred['imageNameWithTag'] = `${cred['imageNameWithTag']}/${choreoApp}:${gitHash}`
+        }
+        cluster_image_tags = data;
+    } catch (error) {
+        console.log("Failed to load deployment-data.json file: ", e);
+    }
+
 
     console.log(`Sending Request to Choreo API....`);
     const body = isContainerDeployment ? {
@@ -61,7 +74,8 @@ try {
         environment_id: envId,
         registry_token: token,
         container_id: containerId,
-        api_definition_path: oasFilePath
+        api_definition_path: oasFilePath,
+        cluster_image_tags
     } : {
         image: imageName,
         tag: gitHash,
@@ -74,7 +88,8 @@ try {
         api_version_id: api_version_id,
         environment_id: envId,
         registry_token: token,
-        workspace_yaml_path: portExtractFilePath
+        workspace_yaml_path: portExtractFilePath,
+        cluster_image_tags
     };
 
     let WebhhookURL;
