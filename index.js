@@ -21,7 +21,7 @@ try {
     const portExtractFilePath = core.getInput('port-extract-file-path');
     // const portExtractFilePath = core.getInput('port-extract-file-path');
     const choreoApp = process.env.CHOREO_APP;
-    console.log("CHOREO_APP ::: ",choreoApp);
+    console.log("CHOREO_APP ::: ", process.env.RUDDER_WEBHOOK_URL, process.env.CHOREO_ORG_ID);
 
     try {
         let fileContents = fs.readFileSync(portExtractFilePath, 'utf8');
@@ -45,6 +45,14 @@ try {
         }
     } catch (e) {
         console.log(e);
+    }
+
+    try {
+        const fileContents = fs.readFileSync(`/home/runner/workspace/${choreoApp}/deployment-data.json`, 'utf8');
+        let data = JSON.parse(fileContents);
+        console.log(data);
+    } catch (error) {
+        console.log("Failed to load deployment-data.json file: ", e);
     }
 
     console.log(`Sending Request to Choreo API....`);
