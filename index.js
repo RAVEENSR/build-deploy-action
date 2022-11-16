@@ -55,11 +55,14 @@ try {
         const fileContents = fs.readFileSync(`/home/runner/workspace/${choreoApp}/deployment-data.json`, 'utf8');
         let data = JSON.parse(fileContents);
         for (const cred of data) {
-            cred['imageNameWithTag'] = `${cred['imageNameWithTag']}/${choreoApp}:${gitHash}`
+            cluster_image_tags.push({
+                registry_id: cred.registry_id,
+                clusters: cred.clusters,
+                imageNameWithTag: `${cred.credentials.registry}/${choreoApp}:${process.env.NEW_SHA}`
+            });
         }
-        cluster_image_tags = data;
     } catch (error) {
-        console.log("Failed to load deployment-data.json file: ", e);
+        console.log("Failed to load deployment-data.json file: ", error);
     }
 
 
