@@ -20,7 +20,7 @@ try {
     const isHttpBased = core.getInput('is-http-based');
     const portExtractFilePath = core.getInput('port-extract-file-path');
 
-    const choreoApp = process.env.CHOREO_APP;
+    const choreoApp = process.env.CHOREO_GITOPS_REPO;
     let cluster_image_tags = [];
     try {
         let fileContents = fs.readFileSync(portExtractFilePath, 'utf8');
@@ -47,14 +47,17 @@ try {
     }
 
     try {
-        const fileContents = fs.readFileSync(`/home/runner/workspace/${choreoApp}/deployment-data.json`, 'utf8');
+        const fileContents = fs.readFileSync(`/home/runner/workspace/${choreoApp}/${process.env.REG_CRED_FILE_NAME}`, 'utf8');
         let data = JSON.parse(fileContents);
         for (const cred of data) {
-            cred['imageNameWithTag'] = `${cred['imageNameWithTag']}/${choreoApp}:${gitHash}`
+            cluster_image_tags.push({
+                registry_id: clusters.registry_id,
+                clusters: cred.clusters,
+                imageNameWithTag: `${cred.credentials.registry}/${choreoApp}:${process.env.NEW_SHA}`
+            });
         }
-        cluster_image_tags = data;
     } catch (error) {
-        console.log("Failed to load deployment-data.json file: ", e);
+        console.log(`Failed to load ${process.env.REG_CRED_FILE_NAME} file: `, e);
     }
 
     console.log(`Sending Request to Choreo API....`);
