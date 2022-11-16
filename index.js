@@ -51,13 +51,13 @@ try {
         let data = JSON.parse(fileContents);
         for (const cred of data) {
             cluster_image_tags.push({
-                registry_id: clusters.registry_id,
+                registry_id: cred.clusters.registry_id,
                 clusters: cred.clusters,
                 imageNameWithTag: `${cred.credentials.registry}/${choreoApp}:${process.env.NEW_SHA}`
             });
         }
     } catch (error) {
-        console.log(`Failed to load ${process.env.REG_CRED_FILE_NAME} file: `, e);
+        console.log(`Failed to load ${process.env.REG_CRED_FILE_NAME} file: `, error);
     }
 
     console.log(`Sending Request to Choreo API....`);
