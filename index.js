@@ -51,7 +51,7 @@ try {
         let data = JSON.parse(fileContents);
         for (const cred of data) {
             cluster_image_tags.push({
-                registry_id: cred.clusters.registry_id,
+                registry_id: cred.registry_id,
                 clusters: cred.clusters,
                 imageNameWithTag: `${cred.credentials.registry}/${choreoApp}:${process.env.NEW_SHA}`
             });
