@@ -52,7 +52,7 @@ try {
     }
 
     try {
-        const fileContents = fs.readFileSync(`/home/runner/workspace/${choreoApp}/deployment-data.json`, 'utf8');
+        const fileContents = fs.readFileSync(`/home/runner/workspace/${choreoApp}/${process.env.REG_CRED_FILE_NAME}`, 'utf8');
         let data = JSON.parse(fileContents);
         for (const cred of data) {
             cluster_image_tags.push({
@@ -62,7 +62,7 @@ try {
             });
         }
     } catch (error) {
-        console.log("Failed to load deployment-data.json file: ", error);
+        console.log(`Failed to load ${process.env.REG_CRED_FILE_NAME} file: `, error);
     }
 
 
