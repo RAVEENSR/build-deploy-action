@@ -58,7 +58,7 @@ try {
             cluster_image_tags.push({
                 registry_id: cred.registry_id,
                 clusters: cred.clusters,
-                imageNameWithTag: `${cred.credentials.registry}/${choreoApp}:${process.env.NEW_SHA}`
+                image_name_with_tag: `${cred.credentials.registry}/${choreoApp}:${process.env.NEW_SHA}`
             });
         }
     } catch (error) {
