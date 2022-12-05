@@ -103,14 +103,14 @@ try {
     }
     if (debug) {
         console.log("request-body: ", JSON.stringify(body));
+        console.log("Final Request: console :::::::: ", WebhhookURL, JSON.stringify(body));
     }
 
-    core.setOutput("Final Request: setOutput :::::::: ", WebhhookURL, body);
-    core.debug("Final Request:Debug :::::::: ", WebhhookURL, body);
-    console.log("Final Request: console :::::::: ", WebhhookURL, body);
+    core.debug("Final Request:Debug :::::::: ", WebhhookURL, JSON.stringify(body));
+    console.log("Final Request: console :::::::: ", WebhhookURL, JSON.stringify(body));
 
     axios.post(WebhhookURL, body).then(function (response) {
-        core.setOutput("choreo-status", "deployed");
+        core.debug("choreo-status", "deployed");
         console.log("choreo-status", "deployed");
     }).catch(function (error) {
         if (error.response) {
@@ -120,13 +120,13 @@ try {
             console.log(error.request);
         } else {
             console.log('Error', error.message);
-            core.setOutput("choreo-status", "failed");
+            core.debug("choreo-status", "failed");
             core.setFailed(error.message);
         }
     });
 
 } catch (error) {
-    core.setOutput("choreo-status", "failed");
+    core.debug("choreo-status", "failed");
     core.setFailed(error.message);
     console.log("choreo-status", "failed");
     console.log(error.message);
