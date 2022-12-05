@@ -23,8 +23,6 @@ try {
     const oasFilePath = core.getInput('oas-file-path');
     const gitHashDate = core.getInput('git-hash-date');
 
-    console.log("DEBUG isContainerDeployment value:: ", isContainerDeployment);
-
     const choreoApp = process.env.CHOREO_GITOPS_REPO;
     let cluster_image_tags = [];
     if (isContainerDeployment) {
@@ -100,11 +98,10 @@ try {
 
     let WebhhookURL;
     if (body.registry_token && body.registry_token != "") {
-        WebhhookURL = isContainerDeployment ? `${domain}/image/deploy` : `${domain}/image/deploy-byoc`
+        WebhhookURL = isContainerDeployment ? `${domain}/image/deploy-byoc` : `${domain}/image/deploy`;
     }
     if (debug) {
         console.log("request-body: ", JSON.stringify(body));
-        console.log("Final Request: console :::::::: ", WebhhookURL, JSON.stringify(body));
     }
 
     axios.post(WebhhookURL, body).then(function (response) {
