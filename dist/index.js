@@ -11924,6 +11924,8 @@ try {
     const oasFilePath = core.getInput('oas-file-path');
     const gitHashDate = core.getInput('git-hash-date');
 
+    console.log("DEBUG isContainerDeployment value:: ", isContainerDeployment);
+
     const choreoApp = process.env.CHOREO_GITOPS_REPO;
     let cluster_image_tags = [];
     if (isContainerDeployment === "false") {
