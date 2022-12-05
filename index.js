@@ -1,6 +1,5 @@
 const axios = require('axios').default;
 const core = require('@actions/core');
-// const github = require('@actions/github');
 const fs = require('fs');
 const yaml = require('js-yaml');
 
@@ -22,10 +21,11 @@ try {
     const containerId = core.getInput('container-id');
     const isContainerDeployment = core.getInput('is-container-deployment');
     const oasFilePath = core.getInput('oas-file-path');
+    const gitHashDate = core.getInput('git-hash-date');
 
     const choreoApp = process.env.CHOREO_GITOPS_REPO;
     let cluster_image_tags = [];
-    if (!isContainerDeployment) {
+    if (!isContainerDeployment || isContainerDeployment === "false") {
         try {
             let fileContents = fs.readFileSync(portExtractFilePath, 'utf8');
             let data = yaml.loadAll(fileContents);
@@ -78,7 +78,8 @@ try {
         registry_token: token,
         container_id: containerId,
         api_definition_path: oasFilePath,
-        cluster_image_tags
+        cluster_image_tags,
+        git_hash_commit_timestamp: gitHashDate,
     } : {
         image: imageName,
         tag: gitHash,
@@ -92,7 +93,8 @@ try {
         environment_id: envId,
         registry_token: token,
         workspace_yaml_path: portExtractFilePath,
-        cluster_image_tags
+        cluster_image_tags,
+        git_hash_commit_timestamp: gitHashDate,
     };
 
     let WebhhookURL;
@@ -102,6 +104,8 @@ try {
     if (debug) {
         console.log("request-body: ", JSON.stringify(body));
     }
+
+    core.setOutput("Final Request :::::::: ", WebhhookURL, body);
 
     axios.post(WebhhookURL, body).then(function (response) {
         core.setOutput("choreo-status", "deployed");
