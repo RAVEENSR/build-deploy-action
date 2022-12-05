@@ -15,6 +15,7 @@ try {
     const api_version_id = core.getInput('version');
     const imageName = core.getInput('image-name');
     const gitHash = core.getInput('git-hash');
+    const gitHashDate = core.getInput('git-hash-date');
     const gitOpsHash = core.getInput('gitops-hash');
     const token = core.getInput('token');
     const debug = core.getInput('debug');
@@ -53,6 +54,7 @@ try {
         tag: gitHash,
         image_ports: extractedPorts,
         git_hash: gitHash,
+        git_hash_commit_timestamp: gitHashDate,
         gitops_hash: gitOpsHash,
         organization_id: organizationId,
         project_id: projectId,

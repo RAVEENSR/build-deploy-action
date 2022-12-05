@@ -10,16 +10,15 @@ choreo API Domain. Default.
 
 ### `org-id`
 
-**Required** choreo Organization ID 
+**Required** choreo Organization ID
 
 ### `app-id`
 
-**Required** choreo App/Component ID 
+**Required** choreo App/Component ID
 
 ### `project-id`
 
-**Required** choreo Project ID 
-
+**Required** choreo Project ID
 
 ### `image-name`
 
@@ -37,6 +36,10 @@ Application Environment ID of choreo component.
 
 Last commit hash.
 
+### `git-hash-date`
+
+Date of last commit hash.
+
 ### `Token`
 
 **Required** choreo Service Account Token to be used for this action. Please use Secrets for this.
@@ -44,7 +47,6 @@ Last commit hash.
 ### `port-extract-file-path`
 
 **Required** file path where deployment ports need to be extracted
-
 
 ## Example
 
@@ -58,7 +60,7 @@ Last commit hash.
        org-id: ${{secrets.ORG_ID}}
        project-id: ${{secrets.PROJECT_ID}}
        token: ${{secrets.TOKEN}}
-       image-name: ${{secrets.DOCKER_USER}}/${{ github.event.repository.name }} 
+       image-name: ${{secrets.DOCKER_USER}}/${{ github.event.repository.name }}
        git-hash: ${{github.sha}}
        env-id: ${{secrets.ENV_ID}}
        app-id: ${{secrets.APP_ID}}
