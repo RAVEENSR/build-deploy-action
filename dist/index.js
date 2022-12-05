@@ -11949,7 +11949,7 @@ try {
 
     const choreoApp = process.env.CHOREO_GITOPS_REPO;
     let cluster_image_tags = [];
-    if (isContainerDeployment) {
+    if (!isContainerDeployment) {
         try {
             let fileContents = fs.readFileSync(portExtractFilePath, 'utf8');
             let data = yaml.loadAll(fileContents);
