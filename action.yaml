@@ -64,7 +64,7 @@ inputs:
   is-http-based: 
     description: "Status of the http based app"
     required: false
-    default: "false"
+    default: ""
   container-id: 
     description: "Container Id"
     required: false
@@ -72,7 +72,7 @@ inputs:
   is-container-deployment: 
     description: "Check container deployment"
     required: false
-    default: "false"
+    default: ""
   oas-file-path: 
     description: "Oas file path"
     required: false

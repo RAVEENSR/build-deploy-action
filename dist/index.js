@@ -12024,7 +12024,7 @@ try {
 
     let WebhhookURL;
     if (body.registry_token && body.registry_token != "") {
-        WebhhookURL = isContainerDeployment === "false" ? `${domain}/image/deploy` : `${domain}/image/deploy-byoc`
+        WebhhookURL = isContainerDeployment ? `${domain}/image/deploy` : `${domain}/image/deploy-byoc`
     }
     if (debug) {
         console.log("request-body: ", JSON.stringify(body));
