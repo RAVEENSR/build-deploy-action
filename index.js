@@ -27,7 +27,7 @@ try {
 
     const choreoApp = process.env.CHOREO_GITOPS_REPO;
     let cluster_image_tags = [];
-    if (isContainerDeployment === "false") {
+    if (isContainerDeployment) {
         try {
             let fileContents = fs.readFileSync(portExtractFilePath, 'utf8');
             let data = yaml.loadAll(fileContents);
@@ -68,7 +68,20 @@ try {
     }
 
     console.log(`Sending Request to Choreo API....`);
-    const body = isContainerDeployment === "false" ? {
+    const body = isContainerDeployment ? {
+        image: imageName,
+        tag: gitHash,
+        git_hash: gitHash,
+        gitops_hash: gitOpsHash,
+        app_id: appId,
+        api_version_id: api_version_id,
+        environment_id: envId,
+        registry_token: token,
+        container_id: containerId,
+        api_definition_path: oasFilePath,
+        cluster_image_tags,
+        git_hash_commit_timestamp: gitHashDate,
+    } : {
         image: imageName,
         tag: gitHash,
         image_ports: extractedPorts,
@@ -81,19 +94,6 @@ try {
         environment_id: envId,
         registry_token: token,
         workspace_yaml_path: portExtractFilePath,
-        cluster_image_tags,
-        git_hash_commit_timestamp: gitHashDate,
-    } : {
-        image: imageName,
-        tag: gitHash,
-        git_hash: gitHash,
-        gitops_hash: gitOpsHash,
-        app_id: appId,
-        api_version_id: api_version_id,
-        environment_id: envId,
-        registry_token: token,
-        container_id: containerId,
-        api_definition_path: oasFilePath,
         cluster_image_tags,
         git_hash_commit_timestamp: gitHashDate,
     };
