@@ -105,7 +105,9 @@ try {
         console.log("request-body: ", JSON.stringify(body));
     }
 
-    core.setOutput("Final Request :::::::: ", WebhhookURL, body);
+    core.setOutput("Final Request: setOutput :::::::: ", WebhhookURL, body);
+    core.debug("Final Request:Debug :::::::: ", WebhhookURL, body);
+    console.log("Final Request: console :::::::: ", WebhhookURL, body);
 
     axios.post(WebhhookURL, body).then(function (response) {
         core.setOutput("choreo-status", "deployed");
