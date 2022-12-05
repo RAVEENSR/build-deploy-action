@@ -12001,15 +12001,12 @@ try {
 
     let WebhhookURL;
     if (body.registry_token && body.registry_token != "") {
-        WebhhookURL = isContainerDeployment ? `${domain}/image/deploy-byoc` : `${domain}/image/deploy`
+        WebhhookURL = isContainerDeployment === "false" ? `${domain}/image/deploy` : `${domain}/image/deploy-byoc`
     }
     if (debug) {
         console.log("request-body: ", JSON.stringify(body));
         console.log("Final Request: console :::::::: ", WebhhookURL, JSON.stringify(body));
     }
-
-    core.debug("Final Request:Debug :::::::: ", WebhhookURL, JSON.stringify(body));
-    console.log("Final Request: console :::::::: ", WebhhookURL, JSON.stringify(body));
 
     axios.post(WebhhookURL, body).then(function (response) {
         core.debug("choreo-status", "deployed");
