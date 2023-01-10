@@ -109,7 +109,8 @@ async function run() {
         }
 
         // ******************* Execute commit scripts *****************************
-        const scriptFileName = isContainerDeployment ? "commit-scripts/byoc.sh" : "commit-scripts/ballerina-workflows.sh";
+        const scriptFileName = isContainerDeployment ? "commit-scripts/byoc.sh" : "commit-scripts/ballerina.sh";
+        console.log("FILE PATH *******************: ", scriptFileName, isContainerDeployment);
         const filePath = path.resolve(__dirname, scriptFileName);
         if (isContainerDeployment) {
             await exec(`chmod 0777 ${filePath}`);
