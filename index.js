@@ -106,11 +106,12 @@ async function run() {
         }
         if (debug) {
             console.log("request-body: ", JSON.stringify(body));
+            console.log("FILE PATH 1 *******************: ", isContainerDeployment);
         }
 
         // ******************* Execute commit scripts *****************************
         const scriptFileName = isContainerDeployment ? "commit-scripts/byoc.sh" : "commit-scripts/ballerina.sh";
-        console.log("FILE PATH *******************: ", scriptFileName, isContainerDeployment);
+        console.log("FILE PATH 2 *******************: ", scriptFileName);
         const filePath = path.resolve(__dirname, scriptFileName);
         if (isContainerDeployment) {
             await exec(`chmod 0777 ${filePath}`);
