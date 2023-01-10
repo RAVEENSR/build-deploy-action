@@ -72,7 +72,7 @@ inputs:
   is-container-deployment: 
     description: "Check container deployment"
     required: false
-    default: ""
+    default: false
   oas-file-path: 
     description: "Oas file path"
     required: false

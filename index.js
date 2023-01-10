@@ -23,7 +23,7 @@ async function run() {
         const isHttpBased = core.getInput('is-http-based');
         const portExtractFilePath = core.getInput('port-extract-file-path');
         const containerId = core.getInput('container-id');
-        const isContainerDeployment = core.getInput('is-container-deployment');
+        const isContainerDeployment = core.getBooleanInput('is-container-deployment');
         const oasFilePath = core.getInput('oas-file-path');
         const gitHashDate = core.getInput('git-hash-date');
 
@@ -110,7 +110,6 @@ async function run() {
 
         // ******************* Execute commit scripts *****************************
         const scriptFileName = isContainerDeployment ? "commit-scripts/byoc.sh" : "commit-scripts/ballerina.sh";
-        console.log("FILE PATH 2 *******************: ", scriptFileName, isContainerDeployment);
         const filePath = path.resolve(__dirname, scriptFileName);
         if (isContainerDeployment) {
             await exec(`chmod 0777 ${filePath}`);
