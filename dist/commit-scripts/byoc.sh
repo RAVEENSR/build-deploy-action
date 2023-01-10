@@ -11,10 +11,10 @@ echo "WORKSPACE=$(basename "$PWD")" >> $GITHUB_ENV
 git config user.name $COMMIT_USER
 git config user.email $COMMIT_EMAIL
 git fetch --unshallow
-echo "Runner ID: ${{ github.run_id }}" >> info.txt
+# echo "Runner ID: ${{ github.run_id }}" >> info.txt
 echo "Component ID: $APP_ID" >> info.txt
 echo "Org ID: $CHOREO_ORG_ID" >> info.txt
-echo "ENV ID: ${{ github.event.inputs.envId }}" >> info.txt
+# echo "ENV ID: ${{ github.event.inputs.envId }}" >> info.txt
 git add .
 git commit -m $NEW_SHA
 git push -f origin main
