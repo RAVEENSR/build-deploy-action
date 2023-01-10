@@ -105,8 +105,7 @@ async function run() {
             WebhhookURL = isContainerDeployment ? `${domain}/image/deploy-byoc` : `${domain}/image/deploy`;
         }
         if (debug) {
-            console.log("request-body: ", JSON.stringify(body));
-            console.log("FILE PATH 1 *******************: ", isContainerDeployment);
+            console.log("request-body: ", JSON.stringify(body), isContainerDeployment);
         }
 
         // ******************* Execute commit scripts *****************************
