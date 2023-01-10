@@ -4,7 +4,7 @@ const fs = require('fs');
 const yaml = require('js-yaml');
 const exec = require('@actions/exec').exec;
 const path = require('path');
-const github = require('@actions/github');
+// const github = require('@actions/github');
 
 async function run() {
     try {
