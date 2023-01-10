@@ -4,7 +4,6 @@ const fs = require('fs');
 const yaml = require('js-yaml');
 const exec = require('@actions/exec').exec;
 const path = require('path');
-// const github = require('@actions/github');
 
 async function run() {
     try {
@@ -17,7 +16,6 @@ async function run() {
         const api_version_id = core.getInput('version');
         const imageName = core.getInput('image-name');
         const gitHash = core.getInput('git-hash');
-        const gitOpsHash = core.getInput('gitops-hash');
         const token = core.getInput('token');
         const debug = core.getInput('debug');
         const isHttpBased = core.getInput('is-http-based');
@@ -69,12 +67,22 @@ async function run() {
             console.log(`Failed to load ${process.env.REG_CRED_FILE_NAME} file: `, error);
         }
 
+
+        // ******************* Execute commit scripts *****************************
+        const scriptFileName = isContainerDeployment ? "commit-scripts/byoc.sh" : "commit-scripts/ballerina.sh";
+        const filePath = path.resolve(__dirname, scriptFileName);
+        if (isContainerDeployment) {
+            await exec(`chmod 0777 ${filePath}`);
+            await exec(`sh ${filePath}`);
+        }
+        // ********************* End **********************************************
+
         console.log(`Sending Request to Choreo API....`);
         const body = isContainerDeployment ? {
             image: imageName,
             tag: gitHash,
             git_hash: gitHash,
-            gitops_hash: gitOpsHash,
+            gitops_hash: process.env.NEW_GITOPS_SHA,
             app_id: appId,
             api_version_id: api_version_id,
             environment_id: envId,
@@ -88,7 +96,7 @@ async function run() {
             tag: gitHash,
             image_ports: extractedPorts,
             git_hash: gitHash,
-            gitops_hash: gitOpsHash,
+            gitops_hash: process.env.NEW_GITOPS_SHA,
             organization_id: organizationId,
             project_id: projectId,
             app_id: appId,
@@ -107,15 +115,6 @@ async function run() {
         if (debug) {
             console.log("request-body: ", JSON.stringify(body));
         }
-
-        // ******************* Execute commit scripts *****************************
-        const scriptFileName = isContainerDeployment ? "commit-scripts/byoc.sh" : "commit-scripts/ballerina.sh";
-        const filePath = path.resolve(__dirname, scriptFileName);
-        if (isContainerDeployment) {
-            await exec(`chmod 0777 ${filePath}`);
-            await exec(`sh ${filePath}`);
-        }
-        // ********************* End **********************************************
 
         axios.post(WebhhookURL, body).then(function (response) {
             core.debug("choreo-status", "deployed");
