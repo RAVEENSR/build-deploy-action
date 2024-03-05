@@ -26,4 +26,5 @@ This action deploys your newly built docker images to Kubernetes clusters throug
         is-http-based: true 
         is-container-deployment: true | false
         is-auto-deploy: true | false
+        run-id: ${{ github.run_id }}
 ```
