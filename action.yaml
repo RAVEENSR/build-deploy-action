@@ -81,6 +81,10 @@ inputs:
     description: "Service auto deploy status"
     required: false
     default: "false"
+  run-id:
+    description: "Run ID of the current build"
+    required: false
+    default: ""
 outputs:
   choreo-status:
     description: "Status of the Webhook Call to choreo"
