@@ -71,6 +71,11 @@ try {
         const fileContents = fs.readFileSync(`/home/runner/workspace/${choreoApp}/${process.env.REG_CRED_FILE_NAME}`, 'utf8');
         let data = JSON.parse(fileContents);
         for (const cred of data) {
+            // We add docker hub docker login to increase the image pull rate limit and this registry id is added as a choreo-docker-hub
+            // so we skip the docker push for this registry
+            if (cred.registry_id == "choreo-docker-hub") {
+                continue;
+            }
             cluster_image_tags.push({
                 registry_id: cred.registry_id,
                 clusters: cred.clusters,
