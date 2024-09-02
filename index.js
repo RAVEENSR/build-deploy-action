@@ -127,6 +127,7 @@ try {
     }
     if (debug) {
         console.log("request-body: ", JSON.stringify(body));
+        console.log("request-url: ", WebhhookURL);
     }
 
     axios.post(WebhhookURL, body).then(function (response) {
