@@ -85,6 +85,10 @@ inputs:
     description: "Run ID of the current build"
     required: false
     default: ""
+  organizationUuid:
+    description: 'Organization UUID'
+    required: true
+    default: ''
 outputs:
   choreo-status:
     description: "Status of the Webhook Call to choreo"
