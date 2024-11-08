@@ -11933,6 +11933,58 @@ function getPreparedPath(path) {
     return seperatedPaths.join("/");
 }
 
+const ACR = "ACR";
+const ECR = "ECR";
+const DOCKER_HUB = "DOCKER_HUB";
+const GCP = "GCP";
+
+function getImageName(imageName, cloudProvider, organizationUuid) {
+    // If the cloud provider is ECR, we use the organizationUuid as the image name in the Choreo API
+    // because we create a common image repository for all the applications in the organization
+    // as AWS multiple account architecture is not going to allow dynamic repository access permissions
+    if (cloudProvider === ECR) {
+        return `${organizationUuid}`;
+    }
+    return imageName;
+}
+
+function getImageTag(cloudProvider, imageName, gitHash) {
+    // If the cloud provider is ECR, we append the image name with the git hash
+    // because we create a common image repository for all the applications in the organization
+    // as AWS multiple account architecture is not going to allow dynamic repository access
+    // permissions
+    if (cloudProvider === ECR) {
+        return `${imageName}-${gitHash}`;
+    }
+    return gitHash;
+}
+
+function getCloudProvider(choreoApp) {
+    const fileContents = fs.readFileSync(
+        `/home/runner/workspace/${choreoApp}/${process.env.REG_CRED_FILE_NAME}`,
+        "utf8"
+    );
+    let data = JSON.parse(fileContents);
+    let cloudProvider = "";
+    for (const cred of data) {
+        switch (cred.type) {
+            case ACR:
+                cloudProvider = ACR;
+                break;
+            case ECR:
+                cloudProvider = ECR;
+                break;
+            case DOCKER_HUB:
+                cloudProvider = DOCKER_HUB;
+                break;
+            case GCP:
+                cloudProvider = GCP;
+                break;
+        }
+    }
+    return cloudProvider;
+}
+
 try {
     const extractedPorts = [];
     const domain = core.getInput('domain');
@@ -11954,8 +12006,10 @@ try {
     const gitHashDate = core.getInput('git-hash-date');
     const isAutoDeploy = core.getInput('is-auto-deploy') === 'true';
     const runId = core.getInput('run-id');
+    const organizationUuid = core.getInput('organizationUuid');
 
     const choreoApp = process.env.CHOREO_GITOPS_REPO;
+    const cloudProvider = getCloudProvider(choreoApp);
     let cluster_image_tags = [];
     let preparedPortExtractFilePath = getPreparedPath(portExtractFilePath);
     if (!isContainerDeployment) {
@@ -12011,9 +12065,11 @@ try {
     }
 
     console.log(`Sending Request to Choreo API....`);
+    const updatedImageName = getImageName(imageName, cloudProvider, organizationUuid);
+    const imageTag = getImageTag(cloudProvider, imageName, gitHash);
     const body = isContainerDeployment ? {
-        image: imageName,
-        tag: gitHash,
+        image: updatedImageName,
+        tag: imageTag,
         git_hash: gitHash,
         gitops_hash: gitOpsHash,
         app_id: appId,
@@ -12027,8 +12083,8 @@ try {
         is_auto_deploy: isAutoDeploy,
         run_id: runId
     } : {
-        image: imageName,
-        tag: gitHash,
+        image: updatedImageName,
+        tag: imageTag,
         image_ports: extractedPorts,
         git_hash: gitHash,
         gitops_hash: gitOpsHash,
