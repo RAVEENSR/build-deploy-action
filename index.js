@@ -86,6 +86,7 @@ try {
 
     const choreoApp = process.env.CHOREO_GITOPS_REPO;
     const cloudProvider = getCloudProvider(choreoApp);
+    console.log("Cloud Provider: ", cloudProvider);
     let cluster_image_tags = [];
     let preparedPortExtractFilePath = getPreparedPath(portExtractFilePath);
     if (!isContainerDeployment) {
@@ -134,6 +135,7 @@ try {
             if (cred.type === ECR) {
                 imageNameWithTag = `${cred.credentials.registry}/${organizationUuid}:${choreoApp}-${process.env.NEW_SHA}`;
             }
+            console.log(`Image Name with Tag: ${imageNameWithTag}`);
             cluster_image_tags.push({
                 registry_id: cred.registry_id,
                 clusters: cred.clusters,
@@ -147,6 +149,8 @@ try {
     console.log(`Sending Request to Choreo API....`);
     const updatedImageName = getImageName(imageName, cloudProvider, organizationUuid);
     const imageTag = getImageTag(cloudProvider, imageName, gitHash);
+    console.log(`Image Name: ${updatedImageName}`);
+    console.log(`Image Tag: ${imageTag}`);
     const body = isContainerDeployment ? {
         image: updatedImageName,
         tag: imageTag,
