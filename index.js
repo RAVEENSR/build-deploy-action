@@ -43,6 +43,7 @@ function getCloudProvider(choreoApp) {
     let data = JSON.parse(fileContents);
     let cloudProvider = "";
     for (const cred of data) {
+        console.log("Cred Type: ", cred.type);
         switch (cred.type) {
             case ACR:
                 cloudProvider = ACR;
