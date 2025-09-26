@@ -136,6 +136,8 @@ try {
             let imageNameWithTag = `${cred.credentials.registry}/${choreoApp}:${process.env.NEW_SHA}`;
             if (cred.type === ECR) {
                 imageNameWithTag = `${cred.credentials.registry}/${organizationUuid}:${choreoApp}-${process.env.NEW_SHA}`;
+            } else if (cred.type === GCP) {
+                imageNameWithTag = `${cred.credentials.registry}/${cred.credentials.repository}/${choreoApp}:${process.env.NEW_SHA}`;
             }
             cluster_image_tags.push({
                 registry_id: cred.registry_id,
